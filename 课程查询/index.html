@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网课进度查询</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffffff, #f5f7fa);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 90%;
+            width: 420px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            background: #f8fafc;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #a0aec0;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        button {
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.2);
+            background: linear-gradient(45deg, #2ecc71, #3498db);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #ffffff, #f5f7fa);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .notice-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            text-align: left;
+        }
+
+        .notice-title {
+            color: #2c3e50;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .notice-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notice-item {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .notice-item:before {
+            content: "•";
+            color: #3498db;
+            position: absolute;
+            left: 0.5rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .notice-item {
+                font-size: 0.85rem;
+            }
+        }
+
+        .contact-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .contact-title {
+            color: #2c3e50;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .contact-item {
+            background: #f8fafc;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            color: #3498db;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: inline-block;
+            border: 2px solid #edf2f7;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .contact-item:hover {
+            background: #fff;
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+        }
+
+        .contact-divider {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .qq-info {
+            color: #e74c3c;  /* QQ的颜色稍微区分一下 */
+        }
+
+        .contact-note {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+        }
+
+        .result-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-frame {
+            width: 100%;
+            height: calc(100% - 55px);
+            border: none;
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #3498db;
+            color: white;
+            padding: 15px 0;
+            cursor: pointer;
+            z-index: 1001;
+            border: none;
+            font-weight: 600;
+            display: none;
+            transform: none;
+            border-radius: 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button.show {
+            display: block;
+        }
+
+        .back-button:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .result-container {
+                padding: 0;
+            }
+
+            .back-button {
+                bottom: 30px;
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <div class="logo">🎓</div>
+        <h2>网课进度查询</h2>
+        <div class="input-group">
+            <input type="text" id="queryId" placeholder="请输入手机号查询" autocomplete="off">
+        </div>
+        <button onclick="query()">查询进度</button>
+
+        <div id="resultContainer" class="result-container">
+            <iframe id="resultFrame" class="result-frame" frameborder="0"></iframe>
+        </div>
+        <button id="backButton" class="back-button" onclick="goBack()">返回查询</button>
+
+        <div class="notice-section">
+            <div class="notice-title">注意事项</div>
+            <ul class="notice-list">
+                <li class="notice-item">请使用注册时的手机号进行查询</li>
+                <li class="notice-item">如遇查询问题，请联系客服处理</li>
+                <li class="notice-item">系统每10分钟更新一次学习进度</li>
+                <li class="notice-item">请确保手机号输入正确，否则将无法查询</li>
+                <li class="notice-item">点击查询进度如果短暂白屏属于正常现象，稍等片刻即可</li>
+            </ul>
+        </div>
+
+        <div class="contact-section">
+            <div class="contact-title">
+                <span>📱 客服微信</span>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">zc-99o</div>
+            </div>
+            <div class="contact-note">工作时间：周一至周日 8:00-23:00</div>
+        </div>
+    </div>
+
+    <script>
+        function query() {
+            const queryId = document.getElementById('queryId').value.trim();
+            if (!queryId) {
+                alert('请输入手机号');
+                return;
+            }
+
+            const records = JSON.parse(localStorage.getItem('queryRecords') || '[]');
+            records.unshift({
+                time: new Date().toLocaleString(),
+                phone: queryId
+            });
+            localStorage.setItem('queryRecords', JSON.stringify(records));
+
+            document.getElementById('resultContainer').classList.add('show');
+            document.getElementById('backButton').classList.add('show');
+            
+            document.getElementById('resultFrame').src = `https://b.pengzi.cc/query/?user=${queryId}`;
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function goBack() {
+            document.getElementById('resultContainer').classList.remove('show');
+            document.getElementById('backButton').classList.remove('show');
+            
+            document.getElementById('resultFrame').src = '';
+            
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('queryId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                query();
+            }
+        });
+    </script>
+</body>
+</html> 
